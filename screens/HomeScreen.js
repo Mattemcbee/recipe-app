@@ -1,13 +1,19 @@
-import { ScrollView, Text, View, StyleSheet,Switch, Button } from 'react-native';
+import { ScrollView, Text, View, StyleSheet, Switch, Button, FlatList } from 'react-native';
 import { Card } from 'react-native-elements';
 import { useSelector } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
 import Loading from '../components/LoadingComponent';
 import { useState } from 'react';
+import { RECIPES } from '../shared/RECIPES';
+import { useNavigation } from '@react-navigation/native';
+
 
 
 const FeaturedItem = (props) => {
     const { item } = props;
+    // const filteredRecipes = useSelector(
+    //     selectFilteredRecipes(props.filteredIngredients)
+    //   );
 
     if (props.isLoading) {
         return <Loading />
@@ -43,45 +49,95 @@ const FeaturedItem = (props) => {
     return <View />;
 };
 
+
 const RecipeOut = (props) => {
     const { item } = props;
+    const navigation = useNavigation();
 
-    
+    // console.log(navigation, 'nav home')
+
+    // console.log(props, 'props')
+    if (props.isLoading) {
+        return <Loading />
+    }
+    if (props.errMess) {
         return (
-            <Card containerStyle={{ padding: 0 }}>
-                    <View style={{ justifyContent: 'center', flex: 1 }}>
-                        <Text
-                            style={{
-                                color: 'red',
-                                textAlign: 'center',
-                                fontSize: 20
-                            }}
-                        >
-                            {item.name}
-                        </Text>
-                    </View>
-                <Text style={{ margin: 20 }}>{item.calories}</Text>
-            </Card>
-        );
-    
+            <View>
+                <Text>{props.errMess}</Text>
+            </View>
+        )
+    }
+
+    if (item) {
+        {
+            // filteredRecipes.map((meal) => {
+            return (
+                //                 {item.map((item, i) => {
+                // return(
+                <>
+                    <Card containerStyle={{ padding: 0 }}
+                        onPress={() =>
+                            navigation.navigate('RecipeInfo', { item })
+                        }
+
+                    >
+                        <View style={{ justifyContent: 'center', flex: 1 }}>
+                            <Text
+                                style={{
+                                    color: 'red',
+                                    textAlign: 'center',
+                                    fontSize: 50
+                                }}
+                            >
+                                {item.name}
+                            </Text>
+                        </View>
+                        <Text style={{ margin: 20 }}>{item.calories}</Text>
+                    </Card>
+                    {/* <FlatList
+                        data={RECIPES}
+                        renderItem={({ item }) => <Text>{item.name}</Text>}
+                        keyExtractor={(item) => item.id.toString()}
+                    /> */}
+                </>
+            );
+
+
+        }
+        // return (
+        //     <FlatList
+        //         data={RECIPES}
+        //         renderItem={renderDirectoryItem}
+        //         keyExtractor={(item) => item.id.toString()}
+        //     />
+        // );
+    }
 };
+
 
 // for picking ingredients
 const IngredientPicker = () => {
-    const [hikeIn, setHikeIn] = useState(false);
-    const [campers, setCampers] = useState(false);
+    const [Potato, setPotato] = useState({ name: 'Potato', value: false });
+    const [Cheese, setCheese] = useState({ name: 'Cheese', value: false });
+    const [checked, setChecked] = useState([]);
 
-    const ingredientArrayCheckIfTrue = [hikeIn,campers];
+    //array to store consts
+    const ingredientArrayCheckIfTrue = [Potato, Cheese];
 
     const handleReservation = () => {
-        console.log('hikeIn: ', hikeIn);
-        console.log('campers: ', campers);
+        // console.log('Potato: ', Potato);
+        // console.log('Cheese: ', Cheese);
 
-        const checked = () => {
-            filter.ingredientArrayCheckIfTrue(name=>name.value)
-        }
+        //stores all ingredients marked true
+        const checked = ingredientArrayCheckIfTrue.filter(value => value.value);
+
         console.log('checked: ', checked);
-        console.log('array: ', ingredientArrayCheckIfTrue);
+
+        //array of just the names to be used to check the recipes
+        const checkedNames = ingredientArrayCheckIfTrue.filter(value => value.value).map(obj => obj.name)
+        console.log('checkedName: ', checkedNames);
+
+        // console.log('array: ', ingredientArrayCheckIfTrue);
     }
 
     return (
@@ -89,15 +145,14 @@ const IngredientPicker = () => {
 
             <View style={styles.formRow}>
                 <Text style={styles.formLabel}>Potato</Text>
-                <Switch style={styles.formItem} value={hikeIn} trackColor={{ true: '#5637DD', false: null }} onValueChange={(value) => setHikeIn(value)} />
-                <Text style={styles.formLabel}>cheese</Text>
-                <Switch style={styles.formItem} value={campers} trackColor={{ true: '#5637DD', false: null }} onValueChange={(value) => setCampers(value)} />
-                
+                <Switch style={styles.formItem} value={Potato} trackColor={{ true: '#5637DD', false: null }} onValueChange={(heck) => setPotato({ name: 'Potato', value: heck })} />
+                <Text style={styles.formLabel}>Cheese</Text>
+                <Switch style={styles.formItem} value={Cheese} trackColor={{ true: '#5637DD', false: null }} onValueChange={(heck) => setCheese({ name: 'Cheese', value: heck })} />
             </View>
 
             <View style={styles.formRow}>
                 <Button
-                    onPress={() => handleReservation()} title='Search Availability' color='#5637DD' accessibilityLabel='Tap me to search for available campsites'
+                    onPress={() => handleReservation()} title='Check for recipes' color='white' accessibilityLabel='Tap me to search for available campsites'
                 />
             </View>
         </ScrollView>
@@ -105,22 +160,29 @@ const IngredientPicker = () => {
 }
 
 const HomeScreen = () => {
-    const campsites = useSelector((state) => state.campsites);
-    const recipe = useSelector((state) => state.recipes);
 
+    // const recipesAll = RECIPES; //filter
+    const recipesAll2 = RECIPES.find((item) => item.featured); //filter
 
-    const recipesAll = recipe;
-    console.log('recipeall', recipesAll)
+    // console.log(recipesAll2, 'recipe all 2')
 
-    const featCampsite = campsites.campsitesArray.find((item) => item.featured);
-    console.log('featCampsite', featCampsite)
+    //where the checked ingredients need to come
+    const ingTest = ['cheese'];
+
+    // console.log(ingTest, ' ing');
+
+    const filteredIngMaybe = RECIPES.filter(names => JSON.stringify(names.ingredients) === JSON.stringify(ingTest))
+    // .includes(ingTest)
+
+    console.log(filteredIngMaybe,'this checks for if ingredeint is in recipe')
+
 
 
     return (
         <ScrollView style={styles.commentsTitle}>
-            <IngredientPicker/>
-            <FeaturedItem item={featCampsite} isLoading={campsites.isLoading} errMess={campsites.errMess} />
-            <RecipeOut item={recipesAll} />
+            <IngredientPicker />
+            <RecipeOut item={recipesAll2}
+            />
 
         </ScrollView>
     );
@@ -145,3 +207,13 @@ const styles = StyleSheet.create({
 
 
 export default HomeScreen;
+
+// const ingredientFilter = (ingredient) => {
+//     if(props.filteredIngredients.length===0){
+//       return true;
+//     }
+    //add logic to check to see if ingedient is in recipe
+    //return true if ingredient exists in recipe
+    //false if it doesn't
+//   }
+  //recipes.filter(ingredientFilter).map()

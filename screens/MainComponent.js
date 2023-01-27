@@ -9,8 +9,6 @@ import {
     DrawerItemList
 } from '@react-navigation/drawer';
 import HomeScreen from './HomeScreen';
-import AboutScreen from './AboutScreen';
-import ContactScreen from './ContactScreen';
 import { Icon } from 'react-native-elements';
 import logo from '../assets/images/logo.png';
 import { useDispatch } from 'react-redux';
@@ -19,7 +17,6 @@ import { fetchPartners } from '../features/partners/partnersSlice';
 import { fetchCampsites } from '../features/campsites/campsiteSlice';
 import { fetchPromotions } from '../features/promotions/promotionsSlice';
 import { fetchComments } from '../features/comments/commentsSlice';
-import ReservationScreen from './ReservationScreen';
 
 const Drawer = createDrawerNavigator();
 
@@ -47,77 +44,84 @@ const HomeNavigator = () => {
                     )
                 })}
             />
-        </Stack.Navigator>
-    );
-};
-
-const AboutNavigator = () => {
-    const Stack = createStackNavigator();
-    return (
-        <Stack.Navigator screenOptions={screenOptions}>
             <Stack.Screen
-                name='About'
-                component={AboutScreen}
-                options={({ navigation }) => ({
-                    headerLeft: () => (
-                        <Icon
-                            name='info-circle'
-                            type='font-awesome'
-                            iconStyle={styles.stackIcon}
-                            onPress={() => navigation.toggleDrawer()}
-                        />
-                    )
+                name='RecipeInfo'
+                component={CampsiteInfoScreen}
+                options={({ route }) => ({
+                    title: route.params.campsite.name
                 })}
             />
         </Stack.Navigator>
     );
 };
 
-const ContactNavigator = () => {
-    const Stack = createStackNavigator();
-    return (
-        <Stack.Navigator screenOptions={screenOptions}>
-            <Stack.Screen
-                name='Contact'
-                component={ContactScreen}
-                options={({ navigation }) => ({
-                    title: 'Contact Us',
-                    headerLeft: () => (
-                        <Icon
-                            name='address-card'
-                            type='font-awesome'
-                            iconStyle={styles.stackIcon}
-                            onPress={() => navigation.toggleDrawer()}
-                        />
-                    )
-                })}
-            />
-        </Stack.Navigator>
-    );
-};
+// const AboutNavigator = () => {
+//     const Stack = createStackNavigator();
+//     return (
+//         <Stack.Navigator screenOptions={screenOptions}>
+//             <Stack.Screen
+//                 name='About'
+//                 component={AboutScreen}
+//                 options={({ navigation }) => ({
+//                     headerLeft: () => (
+//                         <Icon
+//                             name='info-circle'
+//                             type='font-awesome'
+//                             iconStyle={styles.stackIcon}
+//                             onPress={() => navigation.toggleDrawer()}
+//                         />
+//                     )
+//                 })}
+//             />
+//         </Stack.Navigator>
+//     );
+// };
 
-const ReservationNavigator = () => {
-    const Stack = createStackNavigator();
-    return (
-        <Stack.Navigator screenOptions={screenOptions}>
-            <Stack.Screen
-                name='Reservation'
-                component={ReservationScreen}
-                options={({ navigation }) => ({
-                    title: 'Reservation Search',
-                    headerLeft: () => (
-                        <Icon
-                            name='tree'
-                            type='font-awesome'
-                            iconStyle={styles.stackIcon}
-                            onPress={() => navigation.toggleDrawer()}
-                        />
-                    )
-                })}
-            />
-        </Stack.Navigator>
-    );
-};
+// const ContactNavigator = () => {
+//     const Stack = createStackNavigator();
+//     return (
+//         <Stack.Navigator screenOptions={screenOptions}>
+//             <Stack.Screen
+//                 name='Contact'
+//                 component={ContactScreen}
+//                 options={({ navigation }) => ({
+//                     title: 'Contact Us',
+//                     headerLeft: () => (
+//                         <Icon
+//                             name='address-card'
+//                             type='font-awesome'
+//                             iconStyle={styles.stackIcon}
+//                             onPress={() => navigation.toggleDrawer()}
+//                         />
+//                     )
+//                 })}
+//             />
+//         </Stack.Navigator>
+//     );
+// };
+
+// const ReservationNavigator = () => {
+//     const Stack = createStackNavigator();
+//     return (
+//         <Stack.Navigator screenOptions={screenOptions}>
+//             <Stack.Screen
+//                 name='Reservation'
+//                 component={ReservationScreen}
+//                 options={({ navigation }) => ({
+//                     title: 'Reservation Search',
+//                     headerLeft: () => (
+//                         <Icon
+//                             name='tree'
+//                             type='font-awesome'
+//                             iconStyle={styles.stackIcon}
+//                             onPress={() => navigation.toggleDrawer()}
+//                         />
+//                     )
+//                 })}
+//             />
+//         </Stack.Navigator>
+//     );
+// };
 
 const DirectoryNavigator = () => {
     const Stack = createStackNavigator();
@@ -151,6 +155,7 @@ const DirectoryNavigator = () => {
         </Stack.Navigator>
     );
 };
+
 
 const CustomDrawerContent = (props) => (
     <DrawerContentScrollView {...props}>
@@ -221,7 +226,7 @@ const Main = () => {
                         )
                     }}
                 />
-                <Drawer.Screen
+                {/* <Drawer.Screen
                     name='ReserveCampsite'
                     component={ReservationNavigator}
                     options={{
@@ -268,7 +273,7 @@ const Main = () => {
                             />
                         )
                     }}
-                />
+                /> */}
             </Drawer.Navigator>
         </View>
     );
