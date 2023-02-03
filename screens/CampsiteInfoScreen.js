@@ -26,7 +26,7 @@ const CampsiteInfoScreen = ({ route }) => {
             data={comments.commentsArray.filter(
                 (comment) => comment.campsiteId === campsite.id
             )}
-            renderItem={renderCommentItem}
+            // renderItem={renderCommentItem}
             keyExtractor={(item) => item.id.toString()}
             contentContainerStyle={{
                 marginHorizontal: 20,
@@ -39,7 +39,7 @@ const CampsiteInfoScreen = ({ route }) => {
                         isFavorite={favorites.includes(campsite.id)}
                         markFavorite={() => dispatch(toggleFavorite(campsite.id))}
                     />
-                    <Text style={styles.commentsTitle}>Comments</Text>
+                    {/* <Text style={styles.commentsTitle}>Comments</Text> */}
                 </>
             }
         />

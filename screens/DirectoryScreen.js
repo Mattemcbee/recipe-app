@@ -12,7 +12,9 @@ const DirectoryScreen = ({ navigation }) => {
         return (
             <Tile
                 title={campsite.name}
-                caption={campsite.calories}
+                caption={`Time: ${campsite.time}    Calories: ${campsite.calories}    Difficulty: ${campsite.level}`}
+                imageSrc={ campsite.image }
+
                 featured
                 onPress={() =>
                     navigation.navigate('CampsiteInfo', { campsite })

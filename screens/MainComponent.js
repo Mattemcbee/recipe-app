@@ -3,6 +3,7 @@ import Constants from 'expo-constants';
 import CampsiteInfoScreen from './CampsiteInfoScreen';
 import DirectoryScreen from './DirectoryScreen';
 import { createStackNavigator } from '@react-navigation/stack';
+import FavoritesScreen from './FavoritesScreen';
 import {
     createDrawerNavigator,
     DrawerContentScrollView,
@@ -10,7 +11,7 @@ import {
 } from '@react-navigation/drawer';
 import HomeScreen from './HomeScreen';
 import { Icon } from 'react-native-elements';
-import logo from '../assets/images/logo.png';
+import logo from '../assets/images/chef.png';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { fetchPartners } from '../features/partners/partnersSlice';
@@ -22,7 +23,7 @@ const Drawer = createDrawerNavigator();
 
 const screenOptions = {
     headerTintColor: '#fff',
-    headerStyle: { backgroundColor: '#5637DD' }
+    headerStyle: { backgroundColor: '#DDA15E' }
 };
 
 const HomeNavigator = () => {
@@ -48,7 +49,30 @@ const HomeNavigator = () => {
                 name='RecipeInfo'
                 component={CampsiteInfoScreen}
                 options={({ route }) => ({
-                    title: route.params.campsite.name
+                    title: route.params.item.name
+                })}
+            />
+        </Stack.Navigator>
+    );
+};
+
+const FavoritesNavigator = () => {
+    const Stack = createStackNavigator();
+    return (
+        <Stack.Navigator screenOptions={screenOptions}>
+            <Stack.Screen
+                name='Favorites'
+                component={FavoritesScreen}
+                options={({ navigation }) => ({
+                    title: 'Favorite Campsites',
+                    headerLeft: () => (
+                        <Icon
+                            name='heart'
+                            type='font-awesome'
+                            iconStyle={styles.stackIcon}
+                            onPress={() => navigation.toggleDrawer()}
+                        />
+                    )
                 })}
             />
         </Stack.Navigator>
@@ -134,7 +158,7 @@ const DirectoryNavigator = () => {
                 name='Directory'
                 component={DirectoryScreen}
                 options={({ navigation }) => ({
-                    title: 'Campsite Directory',
+                    title: 'Recipes',
                     headerLeft: () => (
                         <Icon
                             name='list'
@@ -192,7 +216,7 @@ const Main = () => {
             <Drawer.Navigator
                 initialRouteName='Home'
                 drawerContent={CustomDrawerContent}
-                drawerStyle={{ backgroundColor: '#CEC8FF' }}
+                drawerStyle={{ backgroundColor: '#DDA15E' }}
             >
                 <Drawer.Screen
                     name='Home'
@@ -214,10 +238,26 @@ const Main = () => {
                     name='Directory'
                     component={DirectoryNavigator}
                     options={{
-                        title: 'Campsite Directory',
+                        title: 'Recipes',
                         drawerIcon: ({ color }) => (
                             <Icon
                                 name='list'
+                                type='font-awesome'
+                                size={24}
+                                iconStyle={{ width: 24 }}
+                                color={color}
+                            />
+                        )
+                    }}
+                />
+                <Drawer.Screen
+                    name='Favorites'
+                    component={FavoritesNavigator}
+                    options={{
+                        title: 'My Favorites',
+                        drawerIcon: ({ color }) => (
+                            <Icon
+                                name='heart'
                                 type='font-awesome'
                                 size={24}
                                 iconStyle={{ width: 24 }}
@@ -281,7 +321,7 @@ const Main = () => {
 
 const styles = StyleSheet.create({
     drawerHeader: {
-        backgroundColor: '#5637DD',
+        backgroundColor: '#DDA15E',
         height: 140,
         alignItems: 'center',
         justifyContent: 'center',
